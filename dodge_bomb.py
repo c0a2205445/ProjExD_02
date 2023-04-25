@@ -34,6 +34,8 @@ def main():
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex02/fig/3.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
+    kk2_img = pg.image.load("ex02/fig/2.png")
+    kk2_img = pg.transform.rotozoom(kk2_img, 0, 2.0)
     tmr = 0
     bb_img = pg.Surface((20, 20))
     pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)  #  練習1
@@ -45,6 +47,8 @@ def main():
     bb_rct.center = x, y  #  初期位置をランダムに設定
     kk_rct = kk_img.get_rect()  #  Rectクラスに変更
     kk_rct.center = 900, 400  #  初期位置を900, 400に設定
+
+    hit = True
 
     while True:
         for event in pg.event.get():
@@ -60,10 +64,11 @@ def main():
         if check_bound(screen.get_rect(), kk_rct) != (True, True):
             for k, mv in delta.items():
                 if key_lst[k]:
-                    kk_rct.move_ip(-mv[0], -mv[1])
+                    kk_rct.move_ip(-mv[0], -mv[1])  #  左右上下でmvの[1][0]で分けている
 
         screen.blit(bg_img, [0, 0])
-        screen.blit(kk_img, kk_rct)  #  練習4
+        if hit == True:
+            screen.blit(kk_img, kk_rct)  #  練習4
         avx, avy= vx*accs[min(tmr//1000, 9)], vy*accs[min(tmr//1000, 9)]  #  avx, avyに時間がたつにつれ
         bb_rct.move_ip(avx, avy)  #  練習３
         yoko, tate = check_bound(screen.get_rect(), bb_rct)
@@ -74,6 +79,8 @@ def main():
         screen.blit(bb_img, bb_rct)  #  練習３
 
         if kk_rct.colliderect(bb_rct):  #  こうかとん爆弾と当たったらmain関数からretrun する
+            hit = False
+            screen.blit(kk2_img, kk_rct)
             return 
 
         
