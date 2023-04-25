@@ -11,6 +11,7 @@ delta = {
 
 }
 
+accs = [a for a in range(1, 11)]  #  加速度のリスト
 
 def check_bound(scr_rct: pg.Rect, obj_rct: pg.Rect) -> tuple[bool, bool]:
     """
@@ -51,7 +52,7 @@ def main():
                 return 0
 
         tmr += 1
-        key_lst = pg.key.get_pressed()  #  
+        key_lst = pg.key.get_pressed()  #  keyを押したとき
         for k, mv in delta.items():
             if key_lst[k]:
                 kk_rct.move_ip(mv)
@@ -63,7 +64,8 @@ def main():
 
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, kk_rct)  #  練習4
-        bb_rct.move_ip(vx, vy)  #  練習３
+        avx, avy= vx*accs[min(tmr//1000, 9)], vy*accs[min(tmr//1000, 9)]  #  avx, avyに時間がたつにつれ
+        bb_rct.move_ip(avx, avy)  #  練習３
         yoko, tate = check_bound(screen.get_rect(), bb_rct)
         if not yoko:  #  横方向にはみ出たら
             vx*= -1
@@ -72,7 +74,10 @@ def main():
         screen.blit(bb_img, bb_rct)  #  練習３
 
         if kk_rct.colliderect(bb_rct):  #  こうかとん爆弾と当たったらmain関数からretrun する
-            return
+            return 
+
+        
+        
 
         pg.display.update()
         clock.tick(1000)
